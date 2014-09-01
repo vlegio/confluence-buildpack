@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [ -f "$1/bin/start-confluence.sh" ]; then
+    echo "Jira" && exit 0
+else
+    echo "no" && exit 1
+fi
+

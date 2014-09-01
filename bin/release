@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+app_root="/app"
+cat <<STUFF
+---
+default_process_types:
+  web: "JIRA_HOME=/app/jira-home $app_root/bin/start-confluence.sh -fg" 
+STUFF
+

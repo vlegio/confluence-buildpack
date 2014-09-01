@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+build_dir=$1
+cache_dir=$2
+
+# fail fast
+set -e
+echo "-----> Accept Java License"
+echo "sun-java6-jdk shared/accepted-sun-dlj-v1-1 select true
+sun-java6-jre shared/accepted-sun-dlj-v1-1 select true
+sun-java7-jdk shared/accepted-sun-dlj-v1-1 select true
+sun-java7-jre shared/accepted-sun-dlj-v1-1 select true
+sun-java7-jdk shared/accepted-oracle-license-v1-1 select true" > /tmp/java.license
+/usr/bin/debconf-set-selections /tmp/java.license
+
+echo "-----> Install Oracle JDK"
+cd /tmp/
+wget 'https://github.com/t0pep0/jira-buildpack/raw/master/deb/oracle-java7-installer_7u65%2B7u60arm-0~webupd8~2_all.deb'
+wget 'https://github.com/t0pep0/jira-buildpack/raw/master/deb/oracle-java7-set-default_7u65%2B7u60arm-0~webupd8~2_all.deb'
+dpkg -i '/tmp/oracle-java7-installer_7u65+7u60arm-0~webupd8~2_all.deb'
+dpkg -i '/tmp/oracle-java7-set-default_7u65+7u60arm-0~webupd8~2_all.deb'
+cd -
+echo "-----> Set confluence.home"
+export confluence.home=/app/jira-home
+echo "-----> Create Confluence dir"
+mkdir $build_dir/logs
+mkdir $build_dir/work
+mkdir $build_dir/jira-home
+echo "-----> Write Confluence Config"
+echo '<Server port="8000" shutdown="SHUTDOWN" debug="0">
+    <Service name="Tomcat-Standalone">
+        <Connector className="org.apache.coyote.tomcat4.CoyoteConnector" port="5000" minProcessors="5"
+                   maxProcessors="75"
+                   enableLookups="false" redirectPort="8443" acceptCount="10" debug="0" connectionTimeout="20000"
+                   useURIValidationHack="false" URIEncoding="UTF-8"/>
+
+        <Engine name="Standalone" defaultHost="localhost" debug="0">
+
+            <Host name="localhost" debug="0" appBase="webapps" unpackWARs="true" autoDeploy="false">
+
+                <Context path="" docBase="../confluence" debug="0" reloadable="false" useHttpOnly="true">
+                    <Manager pathname="" />
+                </Context>
+            </Host>
+        </Engine>
+    </Service>
+</Server>' > $build_dir/conf/server.xml
