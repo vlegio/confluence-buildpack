@@ -21,11 +21,10 @@ dpkg -i '/tmp/oracle-java7-installer_7u65+7u60arm-0~webupd8~2_all.deb'
 dpkg -i '/tmp/oracle-java7-set-default_7u65+7u60arm-0~webupd8~2_all.deb'
 cd -
 echo "-----> Set confluence.home"
-export confluence.home=/app/jira-home
 echo "-----> Create Confluence dir"
 mkdir $build_dir/logs
 mkdir $build_dir/work
-mkdir $build_dir/jira-home
+mkdir $build_dir/conf-home
 echo "-----> Write Confluence Config"
 echo '<Server port="8000" shutdown="SHUTDOWN" debug="0">
     <Service name="Tomcat-Standalone">
