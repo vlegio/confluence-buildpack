@@ -44,3 +44,4 @@ echo '<Server port="8000" shutdown="SHUTDOWN" debug="0">
         </Engine>
     </Service>
 </Server>' > $build_dir/conf/server.xml
+echo 'confluence.home=/app/conf-home' > $build_dir/confluence/WEB-INF/classes/confluence-init.properties
